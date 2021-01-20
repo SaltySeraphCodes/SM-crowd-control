@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<ProfilingTarget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <StandaloneTarget>
+    <PythonInterpreter>
+      <Id>Global|PythonCore|3.8</Id>
+    </PythonInterpreter>
+    <WorkingDirectory>C:\Users\Matthew\Documents\GitHub\SM-crowd-control\StreamReader</WorkingDirectory>
+    <Script>C:\Users\Matthew\Documents\GitHub\SM-crowd-control\StreamReader\readStream.py</Script>
+    <Arguments />
+  </StandaloneTarget>
+  <Reports>
+    <Report>
+      <Filename>C:\Users\Matthew\AppData\Local\Temp\readStream_20210119(48).vsp</Filename>
+    </Report>
+    <Report>
+      <Filename>C:\Users\Matthew\AppData\Local\Temp\readStream_20210119(49).vsp</Filename>
+    </Report>
+  </Reports>
+  <UseVTune>false</UseVTune>
+</ProfilingTarget>

@@ -1,8 +1,13 @@
-dofile( "$SURVIVAL_DATA/Scripts/game/util/Timer.lua" ) -- TODO: Make my own timer class that returns count and limit as well...
+
+dofile("$SURVIVAL_DATA/Scripts/game/util/Timer.lua") -- TODO: Make my own timer class that returns count and limit as well...
 dofile("$SURVIVAL_DATA/Scripts/game/survival_items.lua")
 dofile("$SURVIVAL_DATA/Scripts/game/survival_survivalobjects.lua")
+
 StreamReader = class( nil )
 local readClock = os.clock 
+
+MOD_FOLDER = "$SURVIVAL_DATA/Scripts/game"
+
 function StreamReader.sv_onCreate( self,survivalGameData )
     print("oncreate",survivalGameData)
 	if sm.isHost then
@@ -12,7 +17,6 @@ end
 -- TODO: Stop reading commands while player is dead
 function StreamReader.onCreate( self,survivalGameData ) -- Server_
     --print( "Loading Stream Reader",survivalGameData )
-    self.MOD_FOLDER = "$CONTENT_f5314937-dfb1-4a3a-b469-059f5bf95ef2"
     self.gameData = survivalGameData
     --print('prenetwork',self.network)
     self.network = survivalGameData.network -- Needs more research
@@ -111,7 +115,6 @@ end
 
 function StreamReader.init(self)
     print("Streamreader init hehe")
-    
 end
 
 function StreamReader.sv_readJson(self,fileName)
@@ -343,11 +346,13 @@ function StreamReader.runInstruction(self,instruction) -- (Server)?
             chatMessage = {"/blast"}
             chatInstruction ="cooldown"
         end
+    elseif chatInstruction == "/import" then
+        self.gameData:cl_importCreation(chatParam)
     end
     if chatInstruction == "cooldown" then
         print("is on cooldown")
         alertmessage = chatMessage[1] .. " Is on cooldown" -- alert player name? just say "/spawn failed"?
-    elseif chatInstruction ~= "/spawn" then
+    elseif chatInstruction ~= "/spawn" and chatInstruction ~= "/import" then
         --print("running",chatInstruction)
         self.gameData:cl_onChatCommand(chatMessage)
     end
@@ -408,6 +413,8 @@ function StreamReader.runInstruction(self,instruction) -- (Server)?
                     suffix = "sped you up"
                 end
                 alertmessage = usernameColor..instruction.username.." "..textColor..suffix
+            elseif instruction.type == 'speed' then
+                alertmessage = usernameColor..instruction.username.." "..textColor.." imported a creation"
             end
         end
     end
@@ -418,6 +425,9 @@ function StreamReader.runInstruction(self,instruction) -- (Server)?
     sm.gui.chatMessage( alertmessage )
 end
 
+function StreamReader.sv_importCreation(importParams)
+    sm.creation.importFromFile( importParams.world, "$SURVIVAL_DATA/LocalBlueprints/"..importParams.name..".blueprint", importParams.position )
+end
 
 -- Misc funtions
 function StreamReader.cl_awaitSlap(self) -- Waits for character to be tumbling before applying impulse
@@ -449,7 +459,9 @@ function StreamReader.cl_changeSpeed(self)
         self.speedSet = 0
         self.speedEffected = false
     elseif self.speedEffect:done() and not self.speedEffected then
-        self.player.character:setMovementSpeedFraction(1) -- or default
+        if self.player.character ~=  nil then
+            self.player.character:setMovementSpeedFraction(1) -- or default
+        end
         self.speedSet = 0
     end
 end
@@ -504,7 +516,7 @@ end
 function StreamReader.readFileAtInterval(self,interval) --- Reads specified file at interval (sever?)
     if self.gotTick and self.localClock % interval == 0 then -- Everysecond...
        
-        local jsonData = self:sv_readJson(self.MOD_FOLDER.."/JsonData/"..self.fileName)
+        local jsonData = self:sv_readJson(MOD_FOLDER.."/"..self.fileName)
         --print("Reading json",jsonData)
         if jsonData == nil or jsonData == {} or not jsonData or #jsonData == 0 or jsonData == "{}" then
             --print("NO data")
@@ -545,7 +557,7 @@ function clearTable(table,lastID)
 end
 
 function StreamReader.clearInstructions(self)-- Clears the json file of stuff
-    local path = self.MOD_FOLDER.."/JsonData/"..self.fileName
+    local path = MOD_FOLDER.."/"..self.fileName
     local lastInstructions =  self:sv_readJson(path)
     if lastInstructions == nil or self.lastInstruction == nil then -- Shorcut this error
         print("no last instruction",self.lastInstruction)
@@ -632,7 +644,7 @@ end
 
 function StreamReader.outputData(self,data) -- writes data to json file
     local filename = "gameStats.json"
-    local path = self.MOD_FOLDER .. "/JsonData/" ..filename
+    local path = MOD_FOLDER.."/"..filename
     print("saving:",data)
     sm.json.save(data,path)
 

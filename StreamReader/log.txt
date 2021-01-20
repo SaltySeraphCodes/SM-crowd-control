@@ -1,0 +1,9 @@
+{
+  'ba39cc3f-2ed1-4abe-a7bb-90cddc7f54bf': {
+    age: 0,
+    status: 'prepared',
+    progress: 200,
+    progressText: 'processed!',
+    downloadError: 'never transmitted'
+  }
+}

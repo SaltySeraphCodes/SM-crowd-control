@@ -1,4 +1,5 @@
 dofile( "$SURVIVAL_DATA/Scripts/game/survival_shapes.lua" )
+dofile( "$SURVIVAL_DATA/Scripts/game/survival_shapes.lua" )
 dofile( "$SURVIVAL_DATA/Scripts/game/survival_constants.lua" )
 dofile( "$SURVIVAL_DATA/Scripts/game/survival_spawns.lua" )
 dofile( "$SURVIVAL_DATA/Scripts/game/survival_harvestable.lua" )

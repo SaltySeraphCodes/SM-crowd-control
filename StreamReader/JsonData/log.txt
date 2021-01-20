@@ -1,0 +1,36 @@
+{
+  '5362c7c5-b1c2-44a2-9695-96442744c055': {
+    age: 1,
+    status: 'prepared',
+    progress: 200,
+    progressText: 'processed!',
+    downloadError: 'never transmitted'
+  }
+}
+Response {
+  size: 0,
+  timeout: 0,
+  [Symbol(Body internals)]: {
+    body: PassThrough {
+      _readableState: [ReadableState],
+      readable: true,
+      _events: [Object: null prototype],
+      _eventsCount: 5,
+      _maxListeners: undefined,
+      _writableState: [WritableState],
+      writable: true,
+      allowHalfOpen: true,
+      _transformState: [Object],
+      [Symbol(kCapture)]: false
+    },
+    disturbed: false,
+    error: null
+  },
+  [Symbol(Response internals)]: {
+    url: 'https://backend-01-prd.steamworkshopdownloader.io/api/download/transmit?uuid=5362c7c5-b1c2-44a2-9695-96442744c055',
+    status: 200,
+    statusText: 'OK',
+    headers: Headers { [Symbol(map)]: [Object: null prototype] },
+    counter: 0
+  }
+}
