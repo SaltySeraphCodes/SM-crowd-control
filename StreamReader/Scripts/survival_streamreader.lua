@@ -8,6 +8,8 @@ StreamReader = class( nil )
 local readClock = os.clock 
 
 MOD_FOLDER = "$SURVIVAL_DATA/Scripts/game/StreamReaderData"
+gameStatsPath = MOD_FOLDER.."/gameStats.json"
+streamChatPath = MOD_FOLDER.."/streamchat.json"
 
 function StreamReader.sv_onCreate( self,survivalGameData )
     --print("oncreate",survivalGameData)
@@ -26,7 +28,6 @@ function StreamReader.onCreate( self,survivalGameData ) -- Server_
     self.started = readClock()
     self.localClock = 0
     self.gotTick = false
-    self.fileName = "streamchat.json"
     self.lastInstruction = {['id']= -1}
     self.world = survivalGameData.sv.saved.overworld
     self.instructionQue = {}
@@ -85,8 +86,14 @@ function StreamReader.onCreate( self,survivalGameData ) -- Server_
     self.deathCounter = 0
     self.lives = 100 -- Just in case
     -- stats = 
+    local loadedGameStats = sm.json.open( gameStatsPath )
+    local deathStats = loadedGameStats.deaths
+    deaths = 0
+    if(deathStats ~= nil and type(deathStats) == "number") then
+        deaths = deathStats
+    end
     self.gameStats = { -- Not entirely sure what to put here
-        deaths = 0,
+        deaths = deaths,
         bonks = 0,
         robotKills = 0
     }
@@ -557,7 +564,7 @@ end
 function StreamReader.readFileAtInterval(self,interval) --- Reads specified file at interval (sever?)
     if self.gotTick and self.localClock % interval == 0 then -- Everysecond...
        
-        local jsonData = self:sv_readJson(MOD_FOLDER.."/"..self.fileName)
+        local jsonData = self:sv_readJson(streamChatPath)
         --print("Reading json",jsonData)
         if jsonData == nil or jsonData == {} or not jsonData or #jsonData == 0 or jsonData == "{}" then
             --print("NO data")
@@ -598,8 +605,7 @@ function clearTable(table,lastID)
 end
 
 function StreamReader.clearInstructions(self)-- Clears the json file of stuff
-    local path = MOD_FOLDER.."/"..self.fileName
-    local lastInstructions =  self:sv_readJson(path)
+    local lastInstructions =  self:sv_readJson(streamChatPath)
     if lastInstructions == nil or self.lastInstruction == nil then -- Shorcut this error
         --print("no last instruction",self.lastInstruction)
         return
@@ -612,7 +618,7 @@ function StreamReader.clearInstructions(self)-- Clears the json file of stuff
         clearJson = clearedTable
     end
     self.instructionQue = clearedTable
-	sm.json.save(clearJson, path )
+	sm.json.save(clearJson, streamChatPath)
 end
 
 function StreamReader.sv_onFixedUpdate( self, timeStep )    
@@ -633,6 +639,7 @@ end
 function StreamReader.cl_onFixedUpdate( self, timeStep )
     if self.initialized then
         local dead = self.player:getCharacter():isDowned()
+        self.deathCounter = sm.json.open( gameStatsPath ).deaths
         if dead and not self.playerDead then
             self.deathCounter = self.deathCounter + 1
             self.gameStats.deaths = self.deathCounter -- probably unecessary, could consolidate
@@ -684,8 +691,5 @@ function StreamReader.cl_onFixedUpdate( self, timeStep )
 end
 
 function StreamReader.outputData(self,data) -- writes data to json file
-    local filename = "gameStats.json"
-    local path = MOD_FOLDER.."/"..filename
-    --print("saving:",data)
-    sm.json.save(data,path)
+    sm.json.save(data,gameStatsPath)
 end

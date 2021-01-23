@@ -922,9 +922,11 @@ function SurvivalGame.sv_e_unloadBeacon( self, params )
 end
 
 function SurvivalGame.cl_importCreation( self, params )
+
 	objName = params
 	playerDir = ( sm.vec3.new( 1, 1, 0 ) * sm.camera.getDirection() ) + sm.vec3.new( 0, 0, 2.5 )
 	direction = playerDir * 5
+
 	if(type(params)=="table") then
         objName = params[1]
 		if params[2] ~= nil then
@@ -932,23 +934,26 @@ function SurvivalGame.cl_importCreation( self, params )
 			if params[2] == "above" then
 				direction = sm.vec3.new( 0, 0, 6 )
 			elseif params[2] == "right" then
-				direction = ( sm.camera.getRight() * 4 ) + sm.vec3.new( 0, 0, 2.5 )
+				direction = ( sm.camera.getRight() * 5 ) + sm.vec3.new( 0, 0, 2.5 )
 			elseif params[2] == "left" then
-				direction = ( sm.camera.getRight() * -4 ) + sm.vec3.new( 0, 0, 2.5 )
+				direction = ( sm.camera.getRight() * -5 ) + sm.vec3.new( 0, 0, 2.5 )
 			elseif params[2] == "behind" then
-				direction = ( playerDir * -4 ) + sm.vec3.new( 0, 0, 2.5 )
+				direction = ( playerDir * -5 ) + sm.vec3.new( 0, 0, 2.5 )
 			elseif params[2] == "on" then
 				direction = sm.vec3.new( 0, 0, -1 )
 			end
 		end
     end
+
 	local pos = sm.localPlayer.getPlayer().character:getWorldPosition() + direction
+
 	local importParams = {
 		world = sm.localPlayer.getPlayer().character:getWorld(),
 		name = objName,
 		position = pos,
-		location = MOD_FOLDER
+		location = MOD_FOLDER.."/blueprints"
 	}
+
 	self.network:sendToServer( "sv_importCreation", importParams )
 end
 

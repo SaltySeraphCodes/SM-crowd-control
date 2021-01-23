@@ -10,6 +10,7 @@ from winreg import *
 import vdf
 import json
 from shutil import copyfile
+import shutil
 # import smObjects
 
 ## This automatically finds the scrap mechanic installation
@@ -51,9 +52,10 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 base = os.path.join(dir_path, "Scripts")
 smBase = os.path.join(SM_Location, "Survival", "Scripts", "game")
 dataBase = os.path.join(smBase, "StreamReaderData")
+blueprintBase = os.path.join(dataBase, "blueprints")
 
 # commly used file locations
-statOutput = os.path.join(dir_path, 'JsonData', "statOutput.txt")
+statOutput = os.path.join(dir_path, "DeathCounter.txt")
 gameStats = os.path.join(dataBase, "gameStats.json")
 
 # Import settings? for now have global settings
@@ -189,8 +191,8 @@ def handleInternalCommand(command):
             descFile = os.path.join(dir_path,"downloads",fileId,"description.json").replace("\\\\", "\\")
 
             # init destination file paths
-            jsonFileDest = os.path.join(dataBase, fileId+".blueprint")
-            descFileDest = os.path.join(dataBase, fileId+"-desc.json")
+            jsonFileDest = os.path.join(blueprintBase, fileId+".blueprint")
+            descFileDest = os.path.join(blueprintBase, fileId+"-desc.json")
 
             # checks to see if its already been downloaded
             if not os.path.exists(jsonFileDest):
@@ -435,6 +437,35 @@ def readChat():
         except Exception as e:
             print(type(e), str(e))
 
+commandList = '''
+List of available commands:
+
+1. clear-cache
+   > clears cached imports
+2. reset-deaths
+   > resets the death counter
+3. help
+   > displays this wonderful help message
+'''
+# 3. remove-mod
+#   > restores the original game files, clears the cache, and removes the deathcounter and other files
+
+def internalConsoleCommand(command):
+    if(command == "clear-cache"):
+        shutil.rmtree(blueprintBase)
+        os.makedirs(blueprintBase)
+        log("import cache cleared")
+    elif(command == "reset-deaths"):
+        with open(gameStats, 'w') as outfile:
+            outfile.write('{ "deaths": 0, "bonks": 0, "robotKills": 0 }')
+        log("deaths reset")
+    elif(command == "remove-mod"):
+        print(commandList)
+    elif(command == "help"):
+        print(commandList)
+    else:
+        print("Unknown command, try typing 'help'")
+
 def toJson(obj):
     # this is basically the same as generateCommand, but I made another one for some reason
 
@@ -485,20 +516,24 @@ if __name__ == '__main__':
                     ValidVideo = True
                 except:
                     pass
+        # print("Checking for backups...") maybe sum day :(
 
-        log("Installing Pre-Requisites")
+        print("Installing Pre-Requisites...")
 
         # create nessesary files and folders if the do not exist
-        if not os.path.exists(os.path.join(smBase, "StreamReaderData")):
-            os.makedirs(os.path.join(smBase, "StreamReaderData"))
+        if not os.path.exists(dataBase):
+            os.makedirs(dataBase)
 
+        if not os.path.exists(blueprintBase):
+            os.makedirs(blueprintBase)
+            
         if not os.path.exists(statOutput):
             open(statOutput, 'a').close()
 
         if not os.path.exists(gameStats):
             open(gameStats, 'a').close()
 
-        streamchatFile = open(os.path.join(dataBase, "streamchat.json").replace("\\\\","\\"), "w")
+        streamchatFile = open(os.path.join(dataBase, "streamchat.json"), "w")
         streamchatFile.write("[]")
         streamchatFile.close()
 
@@ -508,5 +543,8 @@ if __name__ == '__main__':
         copyfile(os.path.join(base,"SurvivalGame.lua"), os.path.join(smBase, "SurvivalGame.lua"))
 
         log("Stream Reader initialized")
-        # start the reader
-        readChat()
+        # start the reader as thread
+        threading.Thread(target=readChat).start()
+        # listen for user commands
+        while(True):
+            internalConsoleCommand(input(""))
