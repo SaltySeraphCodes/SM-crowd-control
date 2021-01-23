@@ -1,15 +1,16 @@
 
-dofile("$SURVIVAL_DATA/Scripts/game/util/Timer.lua") -- TODO: Make my own timer class that returns count and limit as well...
+-- TODO: Make my own timer class that returns count and limit as well...
+dofile("$SURVIVAL_DATA/Scripts/game/util/Timer.lua") 
 dofile("$SURVIVAL_DATA/Scripts/game/survival_items.lua")
 dofile("$SURVIVAL_DATA/Scripts/game/survival_survivalobjects.lua")
 
 StreamReader = class( nil )
 local readClock = os.clock 
 
-MOD_FOLDER = "$SURVIVAL_DATA/Scripts/game"
+MOD_FOLDER = "$SURVIVAL_DATA/Scripts/game/StreamReaderData"
 
 function StreamReader.sv_onCreate( self,survivalGameData )
-    print("oncreate",survivalGameData)
+    --print("oncreate",survivalGameData)
 	if sm.isHost then
 		self:onCreate(survivalGameData)
 	end
@@ -81,7 +82,7 @@ function StreamReader.onCreate( self,survivalGameData ) -- Server_
     self.rainEffect:start(0)
     self.speedEffect:start(0)
 
-    self.deathCounter = 51
+    self.deathCounter = 0
     self.lives = 100 -- Just in case
     -- stats = 
     self.gameStats = { -- Not entirely sure what to put here
@@ -100,11 +101,11 @@ function StreamReader.onCreate( self,survivalGameData ) -- Server_
 end
 
 function StreamReader.server_onDestroy(self)
-    print("streamreader destroy")
+    --print("streamreader destroy")
 end
 
 function StreamReader.server_onRefresh( self )
-	print("Refresh")
+	--print("Refresh")
 end
 
 function StreamReader.sv_onRefresh( self,survivalGameData )
@@ -114,7 +115,7 @@ function StreamReader.sv_onRefresh( self,survivalGameData )
 end
 
 function StreamReader.init(self)
-    print("Streamreader init hehe")
+    --print("Streamreader init hehe")
 end
 
 function StreamReader.sv_readJson(self,fileName)
@@ -228,12 +229,27 @@ end
 
 function StreamReader.runInstruction(self,instruction) -- (Server)?
     --print("runing instruction",instruction)
+    local altmessage = nil
+
+    local usernameColor = "#ff0000"
+    local textColor = "#ffffff"
+    local moneyColor = "#3fe30e"
+
     local alertmessage = ""
     if instruction == nil then
         return
     end
+
     local chatInstruction = "/"..instruction.type
+
     local chatParam = instruction.params
+    local paramList = instruction.params
+    
+
+    if(type(instruction.params)=="table") then
+        chatParam = instruction.params[1]
+    end
+
     local chatMessage = {chatInstruction,chatParam}
     
     if chatInstruction == "/kit" then -- Simple things
@@ -262,6 +278,7 @@ function StreamReader.runInstruction(self,instruction) -- (Server)?
             chatInstruction = "cooldown"
         end
     elseif chatInstruction == "/kill" then -- Kills Player
+        --[[
         if self.killCooldown:done() then
             chatMessage = {"/die"}
             self.killCooldown:reset()
@@ -269,6 +286,7 @@ function StreamReader.runInstruction(self,instruction) -- (Server)?
             chatMessage = {"/kill"}
             chatInstruction = "cooldown"
         end
+        ]]
     elseif chatInstruction == "/heal" then -- heals player to 100%
         if self.healCooldown:done() then
             chatMessage = {"/sethp",100}
@@ -347,82 +365,105 @@ function StreamReader.runInstruction(self,instruction) -- (Server)?
             chatInstruction ="cooldown"
         end
     elseif chatInstruction == "/import" then
-        self.gameData:cl_importCreation(chatParam)
+        self.gameData:cl_importCreation(paramList)
+    elseif chatInstruction == "/chat" then
+        if #chatParam > 90 then
+            if (not instruction.amount == 0) then
+                sm.gui.displayAlertText(usernameColor..instruction.username.." "..textColor.."donated "..moneyColor..instruction.amount, instruction.amount+7)
+                sm.gui.chatMessage( usernameColor..instruction.username.." "..textColor.."donated "..moneyColor..instruction.amount..": "..textColor..chatParam )
+            else
+                sm.gui.displayAlertText(usernameColor..instruction.username.." "..textColor.."sent a message", instruction.amount+5)
+                sm.gui.chatMessage( usernameColor..instruction.username.." "..textColor..": "..chatParam )
+            end
+        else
+            if (not instruction.amount == 0) then
+                sm.gui.chatMessage( usernameColor..instruction.username.." "..textColor.."donated "..moneyColor..instruction.amount )
+            end
+            sm.gui.displayAlertText(usernameColor..instruction.username.."\n"..textColor..chatParam, instruction.amount+7 )
+        end
+    elseif chatInstruction == "/log" then
+        sm.gui.chatMessage( usernameColor.."Encountered an Exception: "..textColor..chatParam )
+        if (not instruction.amount == 0) then
+            sm.gui.chatMessage( usernameColor..instruction.username..textColor.." requires a refund of "..moneyColor..instruction.amount )
+        end
     end
     if chatInstruction == "cooldown" then
-        print("is on cooldown")
+        --print("is on cooldown")
         alertmessage = chatMessage[1] .. " Is on cooldown" -- alert player name? just say "/spawn failed"?
-    elseif chatInstruction ~= "/spawn" and chatInstruction ~= "/import" then
+    elseif chatInstruction ~= "/spawn" and chatInstruction ~= "/import" and chatInstruction ~= "/chat" then
         --print("running",chatInstruction)
         self.gameData:cl_onChatCommand(chatMessage)
     end
-
-    local usernameColor = "#ff0000"
-    local textColor = "#ffffff"
-    local moneyColor = "#aaaa00"
    
     -- Alert messages
-    local showPayments = (self.showPayments or false) -- TODO: Move to actual configuration
+    local showPayments = (self.showPayments or (instruction.amount > 0)) -- TODO: Move to actual configuration
+    local paymentMessage = ""
     if chatInstruction ~= "cooldown" then -- TODO: separate to different function(*s)
         if showPayments then
+        --[[
             if instruction.type == "spawn" then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." paid "..moneyColor..instruction.amount.." "..textColor.."to spawn a "..instruction.params
+                paymentMessage = usernameColor..instruction.username.." "..textColor.." paid "..moneyColor..instruction.amount.." "..textColor.."to spawn a "..instruction.params
             elseif instruction.type == 'give' then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." paid "..moneyColor..instruction.amount.." "..textColor.."to give you "..instruction.params
+                paymentMessage = usernameColor..instruction.username.." "..textColor.." paid "..moneyColor..instruction.amount.." "..textColor.."to give you "..instruction.params
             elseif instruction.type == 'kit' then 
-                alertmessage = usernameColor..instruction.username.." "..textColor.." paid "..moneyColor..instruction.amount.." "..textColor.."to give you a "..instruction.params.. " kit"
+                paymentMessage = usernameColor..instruction.username.." "..textColor.." paid "..moneyColor..instruction.amount.." "..textColor.."to give you a "..instruction.params.. " kit"
             elseif instruction.type == 'raid' then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." paid "..moneyColor..instruction.amount.." "..textColor.."to spawn a level "..chatMessage[2] .. " raid."
+                paymentMessage = usernameColor..instruction.username.." "..textColor.." paid "..moneyColor..instruction.amount.." "..textColor.."to spawn a level "..chatMessage[2] .. " raid."
             elseif instruction.type == 'aggro' then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." paid "..moneyColor..instruction.amount.." "..textColor.."to aggro all nearby enemies"
+                paymentMessage = usernameColor..instruction.username.." "..textColor.." paid "..moneyColor..instruction.amount.." "..textColor.."to aggro all nearby enemies"
             elseif instruction.type == 'kill' then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." paid "..moneyColor..instruction.amount.." "..textColor.."to kill you... goodbye"
+                paymentMessage = usernameColor..instruction.username.." "..textColor.." paid "..moneyColor..instruction.amount.." "..textColor.."to kill you... goodbye"
             elseif instruction.type == 'trip' then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." paid "..moneyColor..instruction.amount.." "..textColor.."to trip you"
+                paymentMessage = usernameColor..instruction.username.." "..textColor.." paid "..moneyColor..instruction.amount.." "..textColor.."to trip you"
             end
+            ]]--
+            paymentMessage = " paid "..moneyColor..instruction.amount..textColor.." and"
         else
             if instruction.type == "spawn" then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." spawned a "..instruction.params
+                alertmessage = usernameColor..instruction.username..textColor..paymentMessage.." spawned a "..instruction.params
             elseif instruction.type == 'give' then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." gave you "..instruction.params
+                alertmessage = usernameColor..instruction.username..textColor..paymentMessage.." gave you "..instruction.params
             elseif instruction.type == 'kit' then 
-                alertmessage = usernameColor..instruction.username.." "..textColor.." gave you a "..instruction.params.. " kit"
+                alertmessage = usernameColor..instruction.username..textColor..paymentMessage.." gave you a "..instruction.params.. " kit"
             elseif instruction.type == 'raid' then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." spawned a level "..chatMessage[2] .. " raid."
+                alertmessage = usernameColor..instruction.username..textColor..paymentMessage.." spawned a level "..chatMessage[2] .. " raid."
             elseif instruction.type == 'aggro' then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." aggrovated all nearby enemies"
+                alertmessage = usernameColor..instruction.username..textColor..paymentMessage.." aggrovated all nearby enemies"
             elseif instruction.type == 'kill' then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." killed you... goodbye"
+                alertmessage = usernameColor..instruction.username..textColor..paymentMessage.." killed you... goodbye"
             elseif instruction.type == 'trip' then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." tripped you"
+                alertmessage = usernameColor..instruction.username..textColor..paymentMessage.." tripped you"
             elseif instruction.type == 'slap' then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." slapped you"
+                alertmessage = usernameColor..instruction.username..textColor..paymentMessage.." slapped you"
             elseif instruction.type == 'shield' then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." is protecting you"
+                alertmessage = usernameColor..instruction.username..textColor..paymentMessage.." is protecting you"
             elseif instruction.type == 'rain' then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." made it rain"
+                alertmessage = usernameColor..instruction.username..textColor..paymentMessage.." made it rain"
             elseif instruction.type == 'heal' then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." healed you"
+                alertmessage = usernameColor..instruction.username..textColor..paymentMessage.." healed you"
             elseif instruction.type == 'blast' then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." blasted all bots"
+                alertmessage = usernameColor..instruction.username..textColor..paymentMessage.." blasted all bots"
             elseif instruction.type == 'speed' then
-                local suffix = "changed Your Speed"
+                local suffix = " changed Your Speed"
                 if self.speedSet == -1 then
-                    suffix = "slowed you down"
+                    suffix = " slowed you down"
                 elseif self.speedSet == 1 then
-                    suffix = "sped you up"
+                    suffix = " sped you up"
                 end
-                alertmessage = usernameColor..instruction.username.." "..textColor..suffix
-            elseif instruction.type == 'speed' then
-                alertmessage = usernameColor..instruction.username.." "..textColor.." imported a creation"
+                alertmessage = usernameColor..instruction.username..textColor..paymentMessage..suffix
+            elseif instruction.type == 'import' then
+                local jsonData = self:sv_readJson(MOD_FOLDER.."/"..chatParam.."-desc.json")
+                alertmessage = usernameColor..instruction.username..textColor..paymentMessage.." imported #db6f16"..jsonData['name']
             end
         end
     end
     if instruction ~= nil then
-        print("Ran Instruction:",instruction.type)
+        --print("Ran Instruction:",instruction.type)
     end
     --local testMessge = "#ff0000Hello"
-    sm.gui.chatMessage( alertmessage )
+    if #alertmessage > 0 then
+        sm.gui.chatMessage( alertmessage )
+    end
 end
 
 function StreamReader.sv_importCreation(importParams)
@@ -486,7 +527,7 @@ end
 function StreamReader.sv_rain(self,params) -- calls rain event from/to server
     if not self.world then return end -- maubeunecessary...
     if not self.rainEffect:done() and not self.raining then
-        print("Making it rain")
+        --print("Making it rain")
         sm.event.sendToWorld( self.world, "sv_e_onChatCommand", {"/rain",location = self.playerLocation} ) -- Add Item command? -- need better way to do this...
         self.raining = true
         --sm.gui.chatMessage("#ff0000Prepare For Rain")
@@ -560,7 +601,7 @@ function StreamReader.clearInstructions(self)-- Clears the json file of stuff
     local path = MOD_FOLDER.."/"..self.fileName
     local lastInstructions =  self:sv_readJson(path)
     if lastInstructions == nil or self.lastInstruction == nil then -- Shorcut this error
-        print("no last instruction",self.lastInstruction)
+        --print("no last instruction",self.lastInstruction)
         return
     end
     local lastInstructionID = self.lastInstruction.id
@@ -583,7 +624,7 @@ function StreamReader.sv_onFixedUpdate( self, timeStep )
         self:sv_blast()
     end
     if self.dataChange then -- output stats to json
-        print("dataChange",self.gameStats)
+        --print("dataChange",self.gameStats)
         self:outputData(self.gameStats)
         self.dataChange = false
     end
@@ -645,7 +686,6 @@ end
 function StreamReader.outputData(self,data) -- writes data to json file
     local filename = "gameStats.json"
     local path = MOD_FOLDER.."/"..filename
-    print("saving:",data)
+    --print("saving:",data)
     sm.json.save(data,path)
-
 end

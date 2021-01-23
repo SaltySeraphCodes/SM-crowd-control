@@ -78,32 +78,26 @@ async function download(fileid, dest) {
 
 (async () =>
 {
+    try {
+        const dest = path.join(process.cwd(), "downloads");
 
-    const dest = path.join(process.cwd(), "downloads");
+        if (!fs.existsSync(dest)) {
+            fs.mkdirSync(dest);
+        }
+        else {
+            fs.rmdirSync(dest, { recursive: true });
+            sleep(100);
+            fs.mkdirSync(dest);
+        }
 
-    if (!fs.existsSync(dest))
-    {
-        fs.mkdirSync(dest);
-    }
-    else
-    {
-        fs.rmdirSync(dest, { recursive: true });
-        sleep(100);
-        fs.mkdirSync(dest);
-    }
+        await download(parseInt(startArgs[0]), dest);
 
-    await download(parseInt(startArgs[0]), dest);
-
-    try
-    {
         target = path.join(dest, startArgs[0]);
 
-        if (!fs.existsSync(target))
-        {
+        if (!fs.existsSync(target)) {
             fs.mkdirSync(target);
         }
-        else
-        {
+        else {
             fs.rmdirSync(target, { recursive: true });
             fs.mkdirSync(target);
         }
@@ -121,8 +115,7 @@ async function download(fileid, dest) {
 
         process.exit();
     }
-    catch (err)
-    {
-        console.log(err);
+    catch (err) {
+        process.exit(69);
     }
 })();

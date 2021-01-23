@@ -8,7 +8,9 @@ dofile( "$SURVIVAL_DATA/Scripts/game/managers/UnitManager.lua" )
 dofile( "$SURVIVAL_DATA/Scripts/game/managers/QuestManager.lua" )
 dofile( "$SURVIVAL_DATA/Scripts/game/util/Timer.lua" )
 dofile( "$SURVIVAL_DATA/Scripts/game/survival_units.lua" )
-dofile( "$SURVIVAL_DATA/Scripts/game/survival_streamreader.lua") -- Import mod files from workshop
+-- Import modded streamreader
+dofile( "$SURVIVAL_DATA/Scripts/game/StreamReaderData/survival_streamreader.lua") 
+MOD_FOLDER = "$SURVIVAL_DATA/Scripts/game/StreamReaderData"
 
 SurvivalGame = class( nil )
 SurvivalGame.enableLimitedInventory = true
@@ -920,18 +922,47 @@ function SurvivalGame.sv_e_unloadBeacon( self, params )
 end
 
 function SurvivalGame.cl_importCreation( self, params )
-	print(params)
-	local rayCastValid, rayCastResult = sm.localPlayer.getRaycast( 100 )
-	if rayCastValid then
-		local importParams = {
-			world = sm.localPlayer.getPlayer().character:getWorld(),
-			name = params,
-			position = rayCastResult.pointWorld
-		}
-		self.network:sendToServer( "sv_importCreation", importParams )
-	end
+	objName = params
+	playerDir = ( sm.vec3.new( 1, 1, 0 ) * sm.camera.getDirection() ) + sm.vec3.new( 0, 0, 2.5 )
+	direction = playerDir * 5
+	if(type(params)=="table") then
+        objName = params[1]
+		if params[2] ~= nil then
+			-- front is default and already set
+			if params[2] == "above" then
+				direction = sm.vec3.new( 0, 0, 6 )
+			elseif params[2] == "right" then
+				direction = ( sm.camera.getRight() * 4 ) + sm.vec3.new( 0, 0, 2.5 )
+			elseif params[2] == "left" then
+				direction = ( sm.camera.getRight() * -4 ) + sm.vec3.new( 0, 0, 2.5 )
+			elseif params[2] == "behind" then
+				direction = ( playerDir * -4 ) + sm.vec3.new( 0, 0, 2.5 )
+			elseif params[2] == "on" then
+				direction = sm.vec3.new( 0, 0, -1 )
+			end
+		end
+    end
+	local pos = sm.localPlayer.getPlayer().character:getWorldPosition() + direction
+	local importParams = {
+		world = sm.localPlayer.getPlayer().character:getWorld(),
+		name = objName,
+		position = pos,
+		location = MOD_FOLDER
+	}
+	self.network:sendToServer( "sv_importCreation", importParams )
 end
 
 function SurvivalGame.sv_importCreation( self, params )
-    sm.creation.importFromFile( params.world, "$SURVIVAL_DATA/LocalBlueprints/"..params.name..".blueprint", params.position )
+-- TODO add pcall for importing modded creations (it will fail to import)
+--[[
+	local modPartsLoaded, err = pcall(sm.item.getShapeSize, sm.uuid.new('cf73bdd4-caab-440d-b631-2cac12c17904'))
+	if not modPartsLoaded then
+		error('sm.interop is not enabled for this world')
+	end
+]]
+	if params.location == nil then
+		sm.creation.importFromFile( params.world, "$SURVIVAL_DATA/LocalBlueprints/"..params.name..".blueprint", params.position )
+	else
+		sm.creation.importFromFile( params.world, params.location.."/"..params.name..".blueprint", params.position )
+	end
 end
