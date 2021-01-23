@@ -1,4 +1,5 @@
 dofile( "$SURVIVAL_DATA/Scripts/game/survival_shapes.lua" )
+dofile( "$SURVIVAL_DATA/Scripts/game/survival_shapes.lua" )
 dofile( "$SURVIVAL_DATA/Scripts/game/survival_constants.lua" )
 dofile( "$SURVIVAL_DATA/Scripts/game/survival_spawns.lua" )
 dofile( "$SURVIVAL_DATA/Scripts/game/survival_harvestable.lua" )
@@ -324,6 +325,7 @@ function BaseWorld.server_onCollision( self, objectA, objectB, collisionPosition
 end
 
 function BaseWorld.sv_e_onChatCommand( self, params )
+	print(params[1])
 	if params[1] == "/starterkit" then
 		local chest = sm.shape.createPart( obj_container_smallchest, params.player.character.worldPosition + sm.vec3.new( 0, 0, 2 ), sm.quat.identity() )
 		chest.color = sm.color.new( 1, 0.5, 0 )

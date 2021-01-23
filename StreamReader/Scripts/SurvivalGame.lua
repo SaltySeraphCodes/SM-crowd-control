@@ -8,7 +8,9 @@ dofile( "$SURVIVAL_DATA/Scripts/game/managers/UnitManager.lua" )
 dofile( "$SURVIVAL_DATA/Scripts/game/managers/QuestManager.lua" )
 dofile( "$SURVIVAL_DATA/Scripts/game/util/Timer.lua" )
 dofile( "$SURVIVAL_DATA/Scripts/game/survival_units.lua" )
-dofile( "$CONTENT_f5314937-dfb1-4a3a-b469-059f5bf95ef2/Scripts/survival_streamreader.lua") -- Import mod files from workshop
+-- Import modded streamreader
+dofile( "$SURVIVAL_DATA/Scripts/game/StreamReaderData/survival_streamreader.lua") 
+MOD_FOLDER = "$SURVIVAL_DATA/Scripts/game/StreamReaderData"
 
 SurvivalGame = class( nil )
 SurvivalGame.enableLimitedInventory = true
@@ -59,7 +61,7 @@ function SurvivalGame.server_onCreate( self )
 	g_questManager:sv_activateQuest( quest_use_terminal )
 
 	if g_survivalDev then
-		g_questManager:sv_completeQuest( quest_pickup_logbook )
+		g_questManager:sv_completeQuest( quest_pickup_printbook )
 	end
 
 	
@@ -148,7 +150,7 @@ function SurvivalGame.client_onCreate( self )
 		sm.game.bindChatCommand( "/disableraids", { { "bool", "enabled", false } }, "cl_onChatCommand", "Disable raids if true" )
 		sm.game.bindChatCommand( "/camera", {}, "cl_onChatCommand", "Spawn a SplineCamera tool" )
 
-		sm.game.bindChatCommand( "/printglobals", {}, "cl_onChatCommand", "Print all global lua variables" )
+		sm.game.bindChatCommand( "/printglobals", {}, "cl_onChatCommand", "print all global lua variables" )
 		sm.game.bindChatCommand( "/clearpathnodes", {}, "cl_onChatCommand", "Clear all path nodes in overworld" )
 		sm.game.bindChatCommand( "/enablepathpotatoes", { { "bool", "enable", true } }, "cl_onChatCommand", "Creates path nodes at potato hits in overworld and links to previous node" )
 
@@ -787,7 +789,7 @@ function SurvivalGame.sv_e_createElevatorDestination( self, params )
 					g_elevatorManager:sv_loadBForPlayersInElevator( params.portal, warehouse.world, cell.x, cell.y )
 				end
 			else
-				sm.log.error( "No exit hint found, this elevator is going nowhere!" )
+				sm.print.error( "No exit hint found, this elevator is going nowhere!" )
 			end
 			return
 		else
@@ -874,7 +876,7 @@ function SurvivalGame.sv_e_onSpawnPlayerCharacter( self, player )
 		g_respawnManager:sv_onSpawnCharacter( player )
 		g_beaconManager:sv_onSpawnCharacter( player )
 	else
-		sm.log.warning("SurvivalGame.sv_e_onSpawnPlayerCharacter for a character that doesn't exist")
+		sm.print.warning("SurvivalGame.sv_e_onSpawnPlayerCharacter for a character that doesn't exist")
 	end
 end
 
@@ -882,7 +884,7 @@ function SurvivalGame.sv_e_markBag( self, params )
 	if sm.exists( params.world ) then
 		sm.event.sendToWorld( params.world, "sv_e_markBag", params )
 	else
-		sm.log.warning("SurvivalGame.sv_e_markBag in a world that doesn't exist")
+		sm.print.warning("SurvivalGame.sv_e_markBag in a world that doesn't exist")
 	end
 end
 
@@ -890,7 +892,7 @@ function SurvivalGame.sv_e_unmarkBag( self, params )
 	if sm.exists( params.world ) then
 		sm.event.sendToWorld( params.world, "sv_e_unmarkBag", params )
 	else
-		sm.log.warning("SurvivalGame.sv_e_unmarkBag in a world that doesn't exist")
+		sm.print.warning("SurvivalGame.sv_e_unmarkBag in a world that doesn't exist")
 	end
 end
 
@@ -899,7 +901,7 @@ function SurvivalGame.sv_e_createBeacon( self, params )
 	if sm.exists( params.beacon.world ) then
 		sm.event.sendToWorld( params.beacon.world, "sv_e_createBeacon", params )
 	else
-		sm.log.warning( "SurvivalGame.sv_e_createBeacon in a world that doesn't exist" )
+		sm.print.warning( "SurvivalGame.sv_e_createBeacon in a world that doesn't exist" )
 	end
 end
 
@@ -907,7 +909,7 @@ function SurvivalGame.sv_e_destroyBeacon( self, params )
 	if sm.exists( params.beacon.world ) then
 		sm.event.sendToWorld( params.beacon.world, "sv_e_destroyBeacon", params )
 	else
-		sm.log.warning( "SurvivalGame.sv_e_destroyBeacon in a world that doesn't exist" )
+		sm.print.warning( "SurvivalGame.sv_e_destroyBeacon in a world that doesn't exist" )
 	end
 end
 
@@ -915,6 +917,57 @@ function SurvivalGame.sv_e_unloadBeacon( self, params )
 	if sm.exists( params.beacon.world ) then
 		sm.event.sendToWorld( params.beacon.world, "sv_e_unloadBeacon", params )
 	else
-		sm.log.warning( "SurvivalGame.sv_e_unloadBeacon in a world that doesn't exist" )
+		sm.print.warning( "SurvivalGame.sv_e_unloadBeacon in a world that doesn't exist" )
+	end
+end
+
+function SurvivalGame.cl_importCreation( self, params )
+
+	objName = params
+	playerDir = ( sm.vec3.new( 1, 1, 0 ) * sm.camera.getDirection() ) + sm.vec3.new( 0, 0, 2.5 )
+	direction = playerDir * 5
+
+	if(type(params)=="table") then
+        objName = params[1]
+		if params[2] ~= nil then
+			-- front is default and already set
+			if params[2] == "above" then
+				direction = sm.vec3.new( 0, 0, 6 )
+			elseif params[2] == "right" then
+				direction = ( sm.camera.getRight() * 5 ) + sm.vec3.new( 0, 0, 2.5 )
+			elseif params[2] == "left" then
+				direction = ( sm.camera.getRight() * -5 ) + sm.vec3.new( 0, 0, 2.5 )
+			elseif params[2] == "behind" then
+				direction = ( playerDir * -5 ) + sm.vec3.new( 0, 0, 2.5 )
+			elseif params[2] == "on" then
+				direction = sm.vec3.new( 0, 0, -1 )
+			end
+		end
+    end
+
+	local pos = sm.localPlayer.getPlayer().character:getWorldPosition() + direction
+
+	local importParams = {
+		world = sm.localPlayer.getPlayer().character:getWorld(),
+		name = objName,
+		position = pos,
+		location = MOD_FOLDER.."/blueprints"
+	}
+
+	self.network:sendToServer( "sv_importCreation", importParams )
+end
+
+function SurvivalGame.sv_importCreation( self, params )
+-- TODO add pcall for importing modded creations (it will fail to import)
+--[[
+	local modPartsLoaded, err = pcall(sm.item.getShapeSize, sm.uuid.new('cf73bdd4-caab-440d-b631-2cac12c17904'))
+	if not modPartsLoaded then
+		error('sm.interop is not enabled for this world')
+	end
+]]
+	if params.location == nil then
+		sm.creation.importFromFile( params.world, "$SURVIVAL_DATA/LocalBlueprints/"..params.name..".blueprint", params.position )
+	else
+		sm.creation.importFromFile( params.world, params.location.."/"..params.name..".blueprint", params.position )
 	end
 end

@@ -1,0 +1,3 @@
+# required packages
+
+npm i
