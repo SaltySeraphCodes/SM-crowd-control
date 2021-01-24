@@ -1,4 +1,6 @@
 # Scrap Mechanic Crowd Control #
+
+A WIP Crowd Control implementation into Scrap Mechanic
 ### Command Setup ###
 ```
 {prefix}{command} {parameter}
