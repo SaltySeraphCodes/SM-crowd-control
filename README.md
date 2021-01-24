@@ -1,8 +1,9 @@
 # Scrap Mechanic Crowd Control
 
 ### Command Setup
-> **{ prefix }{ command }  { parameter }**
-
+```
+{prefix}{command}  {parameter}
+```
 ### Commands:
         
 #### Spawn
