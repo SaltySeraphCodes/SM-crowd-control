@@ -5,7 +5,7 @@
 
 ### Commands:
         
-/spawn:
+#### /spawn
 
     totebot 
             
@@ -21,7 +21,7 @@
             
     farmbot
             
-/give: (Give items) Eg: "/give components" [no cooldown]
+#### /give (Give items) Eg: "/give components" [no cooldown]
 
     components
     
@@ -29,23 +29,23 @@
     
     ammo
     
-/heal:
+#### /heal
 
     (heal me to 100%) [20 second cooldown]
 
-/shield:
+#### /shield
 
     (10 second invincibility) [30 second cooldown]
 
-/rain:
+#### /rain
 
     (Make it rain explosives) [30 second cooldown]
 
-/blast:
+#### /blast
 
     (explodes all bots within 200 meters) [60 second cooldown]
 
-/kit:
+#### /kit
 
     (Gives player specified kit) Eg: "/kit food" [no cooldown]
 
@@ -59,35 +59,35 @@
             
     meme
             
-/aggro:
+#### /aggro
 
     (Aggro all nearby units to player) Eg: "/aggro" [no cooldown]
 
-/kill:
+#### /kill
 
     $2 (kill me instantly. use superchat with command in message) [70 second cooldown]
 
-/trip:
+#### /trip
 
     (Make player trip) Eg: "/trip" [45 second cooldown]
 
-/slap:
+#### /slap
     
     (Slap me in a random direction) [45 second cooldown]
 
-/raid:
+#### /raid
 
     ( Spawns a random raid level ) Eg: "/raid" [45 second cooldown]
 
-/fast:
+#### /fast
     
     (Speed me up 7 secs) [30 second cooldown]
 
-/slow:
+#### /slow
 
     (Slow me down 7 secs) [Same cooldown timer as fast]
 
-/import
+#### /import
 
     [creation id] [on,above,right,left,front,behind] [static or dynamic]
 
