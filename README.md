@@ -30,7 +30,7 @@ ___
 +0 second cooldown
 ```
 - Spawn entities
-  - "spawn woc"
+  - _spawn woc_
 ```
 totebot         
 woc          
@@ -45,7 +45,7 @@ farmbot
 +0 second cooldown
 ```
 - Give player items
-  - "give components"
+  - _give components_
 ```
 components
 glowsticks
@@ -56,31 +56,31 @@ ammo
 +20 second cooldown
 ```
 - Heal player to 100% health
-  - "heal"
+  - _heal_
 #### Shield ####
 ```diff
 +30 second cooldown
 ```
 - 10 second invincibility
-  - "shield"
+  - _shield_
 #### Rain ####
 ```diff
 +30 second cooldown
 ```
 - Make it rain explosives
-  - "rain"
+  - _rain_
 #### Blast ####
 ```diff
 +60 second cooldown
 ```
 - Explodes all bots within 200 meters
-  - "blast"
+  - _blast_
 #### Kit ####
 ```diff
 +0 second cooldown
 ```
 - Gives player specified kit
-  - "kit food"
+  - _kit food_
 ```
 seed        
 food       
@@ -93,52 +93,52 @@ meme
 +0 second cooldown
 ```
 - Aggro all nearby units to player
-  - "aggro"
+  - _aggro_
 #### Kill ####
 ```diff
 +70 second cooldown
 ```
 - $2 Kill player instantly. use superchat with command in message
-  - "kill"
+  - _kill_
 #### Trip ####
 ```diff
 +45 second cooldown
 ```
 - Make player trip
-  - "trip" 
+  - _trip_ 
 #### Slap ####
 ```diff
 +45 second cooldown
 ```
 - Slap player in a random direction
-  - "slap" 
+  - _slap_ 
 #### Raid ####
 ```diff
 +45 second cooldown
 ```
 - Spawns a random raid level
-  - "raid"
+  - _raid_
 #### Fast ####
 ```diff
 +30 second cooldown
 ```
 - Speed player up 7 secs
-  - "fast"
+  - _fast_
 #### Slow ####
 ```diff
 +30 second cooldown
 ```
 - Slow player down 7 secs
-  - "slow"
+  - _slow_
 #### Import ####
 ```diff
 +0 second cooldown
 ```
 - Import Creation
-  - "import 123456789"
-  - "import 123456789 on static"
-  - "import 123456789 dynmaic"
-  - "import 123456789 above"
+  - _import 123456789_
+  - _import 123456789 on static_
+  - _import 123456789 dynmaic_
+  - _import 123456789 above_
 ```
 { creation id } { optional param } { optional param }
 ```
