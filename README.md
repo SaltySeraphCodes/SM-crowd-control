@@ -6,11 +6,10 @@
 ### Commands:
         
 #### Spawn
-- Spawn entities
-
 ```diff
 +0 second cooldown
 ```
+- Spawn entities
 ```
 totebot         
 woc          
@@ -21,52 +20,46 @@ redtapebot
 farmbot
 ```           
 #### Give
-- Give player items
-  - "give components"
-
 ```diff
 +0 second cooldown
 ```
+- Give player items
+  - "give components"
 ```
 components
 glowsticks
 ammo
 ```   
 #### Heal
-- Heal player to 100% health
-  - "heal"
-
 ```diff
 +20 second cooldown
 ```
+- Heal player to 100% health
+  - "heal"
 #### Shield
+```diff
++30 second cooldown
+```
 - 10 second invincibility
   - "shield"
-
+#### Rain
 ```diff
 +30 second cooldown
 ```
-#### Rain
 - Make it rain explosives
   - "rain"
-
-```diff
-+30 second cooldown
-```
 #### Blast
-- Explodes all bots within 200 meters
-  - "blast"
-
 ```diff
 +60 second cooldown
 ```
+- Explodes all bots within 200 meters
+  - "blast"
 #### Kit
-- Gives player specified kit
-  - "kit food"
-
 ```diff
 +0 second cooldown
 ```
+- Gives player specified kit
+  - "kit food"
 ```
 seed        
 food       
@@ -75,68 +68,61 @@ pipe
 meme
 ```            
 #### Aggro
-- Aggro all nearby units to player
-  - "/aggro"
-
 ```diff
 +0 second cooldown
 ```
+- Aggro all nearby units to player
+  - "/aggro"
 #### Kill
-- $2 Kill player instantly. use superchat with command in message
-  - "kill"
-
 ```diff
 +70 second cooldown
 ```
+- $2 Kill player instantly. use superchat with command in message
+  - "kill"
 #### Trip
+```diff
++45 second cooldown
+```
 - Make player trip
   - "trip" 
-
+#### Slap
 ```diff
 +45 second cooldown
 ```
-#### Slap
 - Slap player in a random direction
   - "slap" 
+#### Raid
 ```diff
 +45 second cooldown
 ```
-#### Raid
 - Spawns a random raid level
   - "raid"
-
-```diff
-+45 second cooldown
-```
 #### Fast
+```diff
++30 second cooldown
+```
 - Speed player up 7 secs
   - "fast"
-
+#### Slow
 ```diff
 +30 second cooldown
 ```
-#### Slow
 - Slow player down 7 secs
   - "slow"
-
-```diff
-+30 second cooldown
-```
 #### Import
-- Import creation
+```diff
++0 second cooldown
+```
+- Import Creation
   - "import 123456789"
   - "import 123456789 on static"
   - "import 123456789 dynmaic"
   - "import 123456789 above"
-
-```diff
-+0 second cooldown
-```
 ```
 { creation id } { [ on, above, right, left, front, behind ] } { [static or dynamic] }
 ```
 #### Super Chat
-- super chat shows up in game
 ```diff
 +0 second cooldown
 ```
+- Super Chat shows up in game
