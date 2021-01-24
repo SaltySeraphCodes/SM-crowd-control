@@ -8,7 +8,7 @@
 #### spawn
 - Spawn entities
 
-```no cooldown```
+```0 second cooldown```
 ```
 totebot         
 woc          
@@ -22,7 +22,7 @@ farmbot
 - Give player items
   - "give components"
 
-```no cooldown```
+```0 second cooldown```
 ```
 components
 glowsticks
@@ -52,7 +52,7 @@ ammo
 - Gives player specified kit
   - "kit food"
 
-```no cooldown```
+```0 second cooldown```
 ```
 seed        
 food       
@@ -64,7 +64,7 @@ meme
 - Aggro all nearby units to player
   - "/aggro"
 
-```no cooldown```
+```0 second cooldown```
 #### kill
 - $2 Kill me instantly. use superchat with command in message
   - "kill"
@@ -101,7 +101,7 @@ meme
   - "import 123456789 dynmaic"
   - "import 123456789 above"
 
-```no cooldown```
+```0 second cooldown```
 ```
 { creation id } { [ on, above, right, left, front, behind ] } { [static or dynamic] }
 ```
