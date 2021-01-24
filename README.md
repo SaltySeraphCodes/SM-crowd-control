@@ -17,7 +17,7 @@ redtapebot
 farmbot
 ```           
 #### give
-- (Give items) [no cooldown]
+- Give player items [no cooldown]
   - "give components"
 ```
 components
@@ -25,23 +25,23 @@ glowsticks
 ammo
 ```   
 #### heal
-- (heal me to 100%) [20 second cooldown]
+- Heal player to 100% health [20 second cooldown]
   - "heal"
 
 #### shield
-- (10 second invincibility) [30 second cooldown]
+- 10 second invincibility [30 second cooldown]
   - "shield"
 
 #### rain
-- (Make it rain explosives) [30 second cooldown]
+- Make it rain explosives [30 second cooldown]
   - "rain"
 
 #### blast
-- (explodes all bots within 200 meters) [60 second cooldown]
+- Explodes all bots within 200 meters [60 second cooldown]
   - "blast"
 
 #### kit
-- (Gives player specified kit) [no cooldown]
+- Gives player specified kit [no cooldown]
   - "kit food"
 ```
 seed        
@@ -51,35 +51,35 @@ pipe
 meme
 ```            
 #### aggro
-- (Aggro all nearby units to player) [no cooldown]
+- Aggro all nearby units to player [no cooldown]
   - "/aggro"
 
 #### kill
-- $2 (kill me instantly. use superchat with command in message) [70 second cooldown]
+- $2 Kill me instantly. use superchat with command in message) [70 second cooldown]
   - "kill"
 
 #### trip
-- (Make player trip) [45 second cooldown]
+- Make player trip [45 second cooldown]
   - "trip" 
 
 #### slap
-- (Slap me in a random direction) [45 second cooldown]
+- Slap me in a random direction [45 second cooldown]
   - "slap" 
 
 #### raid
-- ( Spawns a random raid level )[45 second cooldown]
+- Spawns a random raid level [45 second cooldown]
   - "raid"
 
 #### fast
-- (Speed me up 7 secs) [30 second cooldown]
+- Speed me up 7 secs [30 second cooldown]
   - "fast"
 
 #### slow
-- (Slow me down 7 secs) [Same cooldown timer as fast]
+- Slow me down 7 secs [Same cooldown timer as fast]
   - "slow"
 
 #### import
-- (Import creation)
+- Import creation
   - "import 123456789"
   - "import 123456789 on static"
   - "import 123456789 dynmaic"
