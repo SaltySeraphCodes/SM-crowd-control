@@ -1,12 +1,17 @@
-# Scrap Mechanic Crowd Control #
+Scrap Mechanic Crowd Control
+=============
 
 A WIP Crowd Control implementation into Scrap Mechanic
+
+<br/>
+<br/>
+
 ### Command Setup ###
 ```
 {prefix}{command} {parameter}
 ```
----
 ### Commands: ###
+___
 #### Spawn ####
 ```diff
 +0 second cooldown
