@@ -2,7 +2,7 @@
 
 ### Command Setup
 ```
-{prefix}{command}  {parameter}
+{prefix}{command} {parameter}
 ```
 ### Commands:
         
