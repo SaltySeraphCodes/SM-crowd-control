@@ -30,6 +30,7 @@ ___
 +0 second cooldown
 ```
 - Spawn entities
+  - "spawn woc"
 ```
 totebot         
 woc          
@@ -92,7 +93,7 @@ meme
 +0 second cooldown
 ```
 - Aggro all nearby units to player
-  - "/aggro"
+  - "aggro"
 #### Kill ####
 ```diff
 +70 second cooldown
