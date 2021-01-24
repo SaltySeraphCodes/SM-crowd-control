@@ -140,7 +140,19 @@ meme
   - "import 123456789 dynmaic"
   - "import 123456789 above"
 ```
-{ creation id } { [ on, above, right, left, front, behind ] } { [static or dynamic] }
+{ creation id } { param } { param }
+```
+```
+on
+above
+right
+left
+front
+behind
+```
+```
+static
+dynamic
 ```
 #### Super Chat ####
 ```diff
