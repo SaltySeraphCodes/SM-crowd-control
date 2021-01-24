@@ -7,13 +7,13 @@
         
 #### /spawn
 ```
-    totebot         
-    woc          
-    worm        
-    haybot        
-    tapebot        
-    redtapebot        
-    farmbot
+totebot         
+woc          
+worm        
+haybot        
+tapebot        
+redtapebot        
+farmbot
 ```           
 #### /give
 - (Give items) Eg: "/give components" [no cooldown]
@@ -37,11 +37,11 @@ ammo
 #### /kit
 - (Gives player specified kit) Eg: "/kit food" [no cooldown]
 ```
-    seed        
-    food       
-    starter      
-    pipe     
-    meme
+seed        
+food       
+starter      
+pipe     
+meme
 ```            
 #### /aggro
 - (Aggro all nearby units to player) Eg: "/aggro" [no cooldown]
@@ -65,7 +65,11 @@ ammo
 - (Slow me down 7 secs) [Same cooldown timer as fast]
 
 #### /import
-- (Import creation) Eg: "/import 123456789", "/import 123456789 on static", "/import 123456789 static"
+- (Import creation) Eg: 
+  - "/import 123456789"
+  - "/import 123456789 on static"
+  - "/import 123456789 dynmaic"
+  - "/import 123456789 above"
 ```
 { creation id } { [ on, above, right, left, front, behind ] } { [static or dynamic] }
 ```
