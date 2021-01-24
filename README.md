@@ -1,12 +1,11 @@
-# Scrap Mechanic Crowd Control
-
-### Command Setup
+# Scrap Mechanic Crowd Control #
+### Command Setup ###
 ```
 {prefix}{command} {parameter}
 ```
-### Commands:
-        
-#### Spawn
+---
+### Commands: ###
+#### Spawn ####
 ```diff
 +0 second cooldown
 ```
@@ -20,7 +19,7 @@ tapebot
 redtapebot        
 farmbot
 ```           
-#### Give
+#### Give ####
 ```diff
 +0 second cooldown
 ```
@@ -31,31 +30,31 @@ components
 glowsticks
 ammo
 ```   
-#### Heal
+#### Heal ####
 ```diff
 +20 second cooldown
 ```
 - Heal player to 100% health
   - "heal"
-#### Shield
+#### Shield ####
 ```diff
 +30 second cooldown
 ```
 - 10 second invincibility
   - "shield"
-#### Rain
+#### Rain ####
 ```diff
 +30 second cooldown
 ```
 - Make it rain explosives
   - "rain"
-#### Blast
+#### Blast ####
 ```diff
 +60 second cooldown
 ```
 - Explodes all bots within 200 meters
   - "blast"
-#### Kit
+#### Kit ####
 ```diff
 +0 second cooldown
 ```
@@ -68,49 +67,49 @@ starter
 pipe     
 meme
 ```            
-#### Aggro
+#### Aggro ####
 ```diff
 +0 second cooldown
 ```
 - Aggro all nearby units to player
   - "/aggro"
-#### Kill
+#### Kill ####
 ```diff
 +70 second cooldown
 ```
 - $2 Kill player instantly. use superchat with command in message
   - "kill"
-#### Trip
+#### Trip ####
 ```diff
 +45 second cooldown
 ```
 - Make player trip
   - "trip" 
-#### Slap
+#### Slap ####
 ```diff
 +45 second cooldown
 ```
 - Slap player in a random direction
   - "slap" 
-#### Raid
+#### Raid ####
 ```diff
 +45 second cooldown
 ```
 - Spawns a random raid level
   - "raid"
-#### Fast
+#### Fast ####
 ```diff
 +30 second cooldown
 ```
 - Speed player up 7 secs
   - "fast"
-#### Slow
+#### Slow ####
 ```diff
 +30 second cooldown
 ```
 - Slow player down 7 secs
   - "slow"
-#### Import
+#### Import ####
 ```diff
 +0 second cooldown
 ```
@@ -122,7 +121,7 @@ meme
 ```
 { creation id } { [ on, above, right, left, front, behind ] } { [static or dynamic] }
 ```
-#### Super Chat
+#### Super Chat ####
 ```diff
 +0 second cooldown
 ```
