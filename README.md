@@ -137,3 +137,6 @@ meme
 ```
 #### super chat
 - super chat shows up in game
+```diff
++0 second cooldown
+```
