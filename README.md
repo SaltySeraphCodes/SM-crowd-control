@@ -7,10 +7,23 @@ A WIP Crowd Control implementation into Scrap Mechanic
 <br/>
 
 ### Command Setup ###
+___
 ```
 {prefix}{command} {parameter}
 ```
-### Commands: ###
+<br/>
+
+### Command Prefixes ###
+___
+```
+/
+$
+%
+&
+```
+<br/>
+
+### Commands ###
 ___
 #### Spawn ####
 ```diff
