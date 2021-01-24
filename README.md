@@ -6,7 +6,7 @@
 ### Commands:
         
 #### spawn
-- (spawn entities) [no cooldown]
+- Spawn entities
 ```
 totebot         
 woc          
@@ -87,4 +87,5 @@ meme
 ```
 { creation id } { [ on, above, right, left, front, behind ] } { [static or dynamic] }
 ```
-**Super Chat shows up in game**
+#### super chat
+- super chat shows up in game
