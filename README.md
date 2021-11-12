@@ -4,7 +4,6 @@ Scrap Mechanic Crowd Control
 A WIP Crowd Control implementation into Scrap Mechanic
 
 <br/>
-<br/>
 
 ### Command Setup ###
 ___
