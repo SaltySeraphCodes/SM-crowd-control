@@ -2,6 +2,8 @@ Scrap Mechanic Crowd Control
 =============
 
 A WIP Crowd Control implementation into Scrap Mechanic
+SPECIAL THANKS TO THE GUY for honestly writing a majority of the code. excellent and smart guy.
+Felt bad for not using it, but we will now!
 
 <br/>
 
